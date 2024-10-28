@@ -11,7 +11,7 @@ type Props = {
   onPress: () => void
 }
 
-export default function IconButton({ icon, label, onPress }: Props) {
+export function IconButton({ icon, label, onPress }: Props) {
   return (
     <Pressable style={styles.iconButton} onPress={onPress}>
       <MaterialIcons

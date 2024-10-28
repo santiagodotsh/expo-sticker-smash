@@ -3,14 +3,20 @@ import { View, StyleSheet } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { ImageViewer } from '@/components/image-viewer'
 import { Button } from '@/components/button'
-import IconButton from '@/components/icon-button'
+import { IconButton } from '@/components/icon-button'
 import { CircleButton } from '@/components/circle-button'
+import { EmojiPicker}  from '@/components/emoji-picker'
+import { EmojiList } from '@/components/emoji-list'
+import { EmojiSticker } from '@/components/emoji-sticker'
+import type { ImageSource } from 'expo-image'
 
 const PlaceholderImage = require('@/assets/images/background-image.png')
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined)
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false)
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
+  const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(undefined)
   
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -32,7 +38,11 @@ export default function Index() {
   }
 
   const onAddSticker = () => {
-    // we will implement this later
+    setIsModalVisible(true)
+  }
+
+  const onModalClose = () => {
+    setIsModalVisible(false)
   }
 
   const onSaveImageAsync = async () => {
@@ -43,6 +53,7 @@ export default function Index() {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
+        {pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
       </View>
       
       {showAppOptions
@@ -76,6 +87,9 @@ export default function Index() {
             />
           </View>
       )}
+      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
+        <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
+      </EmojiPicker>
     </View>
   )
 }
